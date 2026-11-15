@@ -2,7 +2,7 @@
 /// <reference path="./node_modules/@types/p5/global.d.ts" />
 let background_hex = "#010703";
 let low_green_hex = "#0E361B";
-let mid_green_hex = "#23783F";
+let med_green_hex = "#23783F";
 let hi_green_hex = "#4BF37C";
 let hi_white_hex = "#C6E6CF"
 let layer3d;
@@ -10,6 +10,7 @@ let layer2d;
 let font;
 let frameNum = 0;
 let fps = 30;
+let nSeconds = 5;
 let margins = 25;
 let cursor = "█";
 
@@ -62,7 +63,7 @@ function drawSeparator() {
 
 function drawSubText() {
   let lines = [
-    "> Monday, December 21st",
+    "> Monday, December 14th",
     "> 6 to 8 pm",
   ]
   layer2d.textFont("Roboto Mono");
@@ -88,6 +89,32 @@ function drawAddressText() {
   layer2d.text(lines[2], 2*margins, height-75)
 }
 
+function drawProgressBar() {
+  let nRects = 10;
+  let xStart = 400;
+  let xEnd = 535;
+  let yStart = 666;
+  let yEnd = 735;
+  let spacing = 5;
+  let rectWidth = (
+    (xEnd - xStart) - (nRects-1)*spacing
+  ) / nRects;
+  let rectHeight = yEnd - yStart;
+  for (let i = 0; i < nRects; i++) {
+    if (frameCount % (fps * nSeconds) < (i + 1)*(fps * nSeconds / (nRects + 1)) ) {
+      layer2d.stroke(med_green_hex);
+      layer2d.fill(low_green_hex);
+    } else {
+      layer2d.stroke(hi_green_hex);
+      layer2d.fill(med_green_hex);
+    }
+    layer2d.rect(
+      xStart + i*(rectWidth + spacing), yStart,
+      rectWidth, rectHeight
+    );
+  }
+}
+
 function draw2d() {
   layer2d.clear()
   drawBorder();
@@ -95,6 +122,7 @@ function draw2d() {
   drawSeparator();
   drawSubText();
   drawAddressText();
+  drawProgressBar();
 }
 
 function drawSphere() {
@@ -104,7 +132,9 @@ function drawSphere() {
   // Rotate the sphere down a bit, same rotation every time
   layer3d.rotateX(-PI/6);
   // Rotate the sphere by an amount that increases with every frame
-  layer3d.rotateY(frameCount * 0.01);
+  layer3d.rotateY(
+    frameCount * (PI/2)/(fps*nSeconds)
+  );
   // Make the shape hollow/wireframe
   layer3d.noFill();
   layer3d.stroke(hi_green_hex);
