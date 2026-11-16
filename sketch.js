@@ -42,8 +42,7 @@ function drawTitleText() {
   layer2d.text(lines[1], width/2, 140)
 }
 
-function drawScrollingBanner(banner, y) {
-  let nStates = 3;
+function drawScrollingBanner(banner, y, nStates) {
   let duration = 1;  // in seconds
 
   layer2d.textFont("Roboto Mono");
@@ -70,6 +69,33 @@ function drawSubText() {
   layer2d.textAlign(LEFT, CENTER);
   layer2d.text(lines[0], 2*margins, 300)
   layer2d.text(lines[1], 2*margins, 350)
+}
+
+function drawGrid() {
+  let xStart = 50;
+  let xEnd = 220;
+  let yStart = 390;
+  let yEnd = 585;
+  let nxLines = 8;
+  let nyLines = 10;
+  let xSpacing = (xEnd - xStart) / (nxLines - 1);
+  let ySpacing = (yEnd - yStart) / (nyLines - 1);
+
+  layer2d.stroke(med_green_hex);
+  layer2d.noFill();
+
+  for (let i = 0; i < nxLines; i++) {
+    layer2d.line(
+      xStart + i*xSpacing, yStart,
+      xStart + i*xSpacing, yEnd,
+    )
+  }
+  for (let i = 0; i < nyLines; i++) {
+    layer2d.line(
+      xStart, yStart + i*ySpacing,
+      xEnd, yStart + i*ySpacing,
+    )
+  }
 }
 
 function drawAddressText() {
@@ -118,13 +144,13 @@ function draw2d() {
   drawBorder();
   drawTitleText();
   drawScrollingBanner(
-    "  /  /  /  /  /  /  /  /  /", 200
+    " //  //  //  //  //  //  // ", 200, 4
   );
   drawScrollingBanner(
-    // "  \\  \\  \\  \\  \\  \\  \\  \\  \\", 240
-    " /  /  /  /  /  /  /  /  / ", 240
+    "//  //  //  //  //  //  //  ", 240, 4
   );
   drawSubText();
+  drawGrid();
   drawAddressText();
   drawProgressBar();
 }
