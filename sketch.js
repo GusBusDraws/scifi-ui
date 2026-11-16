@@ -19,6 +19,7 @@ function setup() {
   layer3d = createGraphics(600, 800, WEBGL);
   layer2d = createGraphics(600, 800);
   frameRate(fps);
+  // saveGif("creative-code-denver.gif", nSeconds);
 }
 
 function drawBorder() {
@@ -51,7 +52,7 @@ function drawScrollingBanner(banner, y, nStates) {
   layer2d.textAlign(CENTER, CENTER);
 
   let startIndex = Math.floor(
-    frameCount % (fps * duration)
+    (frameCount-1) % (fps * duration)
     / (fps * duration / nStates)
   );
   banner = banner.slice(startIndex) + banner.slice(0, startIndex);
@@ -75,13 +76,14 @@ function drawGrid() {
   let xStart = 50;
   let xEnd = 220;
   let yStart = 390;
-  let yEnd = 585;
+  let yEnd = 590;
   let nxLines = 8;
   let nyLines = 10;
   let xSpacing = (xEnd - xStart) / (nxLines - 1);
   let ySpacing = (yEnd - yStart) / (nyLines - 1);
 
-  layer2d.stroke(med_green_hex);
+  layer2d.stroke(low_green_hex);
+  // layer2d.stroke(med_green_hex);
   layer2d.noFill();
 
   for (let i = 0; i < nxLines; i++) {
@@ -96,6 +98,26 @@ function drawGrid() {
       xEnd, yStart + i*ySpacing,
     )
   }
+}
+
+function drawWaveform() {
+  let a = 80;
+  let w = PI/24;
+  let step = 1;
+  let xMax = 170;
+  let nCycles = 3;
+  let phase = 2*PI * nCycles * (frameCount - 1) / (fps * nSeconds);
+
+  layer2d.push()
+  layer2d.translate(50, 490)
+  layer2d.stroke(hi_green_hex);
+  for (let x = 0; x < xMax; x+=step) {
+    layer2d.line(
+      x, a*sin(w*x + phase),
+      (x+step), a*sin(w*(x+step) + phase),
+    )
+  }
+  layer2d.pop()
 }
 
 function drawAddressText() {
@@ -125,7 +147,7 @@ function drawProgressBar() {
   ) / nRects;
   let rectHeight = yEnd - yStart;
   for (let i = 0; i < nRects; i++) {
-    if (frameCount % (fps * nSeconds) < (i + 1)*(fps * nSeconds / (nRects + 1)) ) {
+    if ((frameCount-1) % (fps * nSeconds) < (i + 1)*(fps * nSeconds / (nRects + 1)) ) {
       layer2d.stroke(med_green_hex);
       layer2d.fill(low_green_hex);
     } else {
@@ -151,6 +173,7 @@ function draw2d() {
   );
   drawSubText();
   drawGrid();
+  drawWaveform();
   drawAddressText();
   drawProgressBar();
 }
@@ -163,7 +186,7 @@ function drawSphere() {
   layer3d.rotateX(-PI/6);
   // Rotate the sphere by an amount that increases with every frame
   layer3d.rotateY(
-    frameCount * (PI/2)/(fps*nSeconds)
+    (frameCount-1) * (PI/2)/(fps*nSeconds)
   );
   // Make the shape hollow/wireframe
   layer3d.noFill();
@@ -185,5 +208,5 @@ function draw() {
   filter(BLUR, 5);
   image(layer2d, 0, 0);
   image(layer3d, 0, 0);
-  frameNum = frameCount % 10;
+  // if (frameCount < fps * nSeconds) {
 }
