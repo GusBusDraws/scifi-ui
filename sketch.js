@@ -42,23 +42,21 @@ function drawTitleText() {
   layer2d.text(lines[1], width/2, 140)
 }
 
-function drawSeparator() {
-  let states = [
-    "  /  /  /  /  /  /  /  /  / ",
-    " /  /  /  /  /  /  /  /  /  ",
-    "/  /  /  /  /  /  /  /  /  /",
-  ]
+function drawScrollingBanner(banner, y) {
+  let nStates = 3;
+  let duration = 1;  // in seconds
+
   layer2d.textFont("Roboto Mono");
   layer2d.fill(hi_green_hex);
   layer2d.textSize(30);
   layer2d.textAlign(CENTER, CENTER);
-  let separator = states[0];
-  if (frameCount % 15 < 5) {
-    separator = states[1];
-  } else if (frameCount % 15 < 10) {
-    separator = states[2];
-  }
-  layer2d.text(separator, width/2, 225)
+
+  let startIndex = Math.floor(
+    frameCount % (fps * duration)
+    / (fps * duration / nStates)
+  );
+  banner = banner.slice(startIndex) + banner.slice(0, startIndex);
+  layer2d.text(banner, width/2, y)
 }
 
 function drawSubText() {
@@ -119,7 +117,13 @@ function draw2d() {
   layer2d.clear()
   drawBorder();
   drawTitleText();
-  drawSeparator();
+  drawScrollingBanner(
+    "  /  /  /  /  /  /  /  /  /", 200
+  );
+  drawScrollingBanner(
+    // "  \\  \\  \\  \\  \\  \\  \\  \\  \\", 240
+    " /  /  /  /  /  /  /  /  / ", 240
+  );
   drawSubText();
   drawAddressText();
   drawProgressBar();
