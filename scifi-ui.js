@@ -1,11 +1,11 @@
 // @ts-nocheck
 /// <reference path="./node_modules/@types/p5/global.d.ts" />
 
-function drawBorder() {
+function drawBorder(x, y, w, h, cornerRadius) {
   layer2d.noFill();
   layer2d.stroke(hi_green_hex);
   layer2d.strokeWeight(2);
-  layer2d.rect(margins, margins, width-50, height-50, 50);
+  layer2d.rect(x, y, w, h, cornerRadius);
   // layer2d.rect(25, 25, 0, 0, 50);
 }
 
@@ -158,4 +158,24 @@ function drawVerticalProgressBar(xMin, xMax, yMin, yMax, nRects, spacing, direct
       rectWidth, rectHeight
     );
   }
+}
+
+function drawSphere() {
+  layer3d.clear()
+  layer3d.push()
+  // Rotate the sphere down a bit, same rotation every time
+  layer3d.rotateX(-PI/2);
+  layer3d.translate(0, 0, height*0.5)
+  layer3d.rotateZ(-PI/2);
+  // Rotate the sphere by an amount that increases with every frame
+  layer3d.rotateY(
+    (frameCount-1) * (-PI/2)/(fps*nSeconds)
+  );
+  // Make the shape hollow/wireframe
+  layer3d.noFill();
+  layer3d.stroke(hi_green_hex);
+  layer3d.strokeWeight(2);
+  // Draw a sphere
+  layer3d.sphere(250, 16, 8);
+  layer3d.pop()
 }
