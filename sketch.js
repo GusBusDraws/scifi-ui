@@ -30,17 +30,19 @@ function drawBorder() {
   // layer2d.rect(25, 25, 0, 0, 50);
 }
 
-function drawTitleText() {
-  let lines = [
-    "CREATIVE CODE",
-    "DENVER",
-  ]
-  layer2d.textFont("Orbitron");
-  layer2d.fill(hi_white_hex);
-  layer2d.textSize(50);
-  layer2d.textAlign(CENTER, CENTER);
-  layer2d.text(lines[0], width/2, 85)
-  layer2d.text(lines[1], width/2, 140)
+function drawText(lines, font, fontSize, fontColor, x, y, lineSize, centered) {
+  layer2d.textFont(font);
+  layer2d.noStroke();
+  layer2d.fill(fontColor);
+  layer2d.textSize(fontSize);
+  if (centered == true) {
+    layer2d.textAlign(CENTER, CENTER);
+  } else {
+    layer2d.textAlign(LEFT, CENTER);
+  }
+  for (let i=0; i<lines.length; i++) {
+    layer2d.text(lines[i], x, y + i*lineSize)
+  }
 }
 
 function drawScrollingBanner(banner, y, nStates, characterColor) {
@@ -61,19 +63,6 @@ function drawScrollingBanner(banner, y, nStates, characterColor) {
   );
   banner = banner.slice(startIndex) + banner.slice(0, startIndex);
   layer2d.text(banner, width/2, y)
-}
-
-function drawSubText() {
-  let lines = [
-    "> Monday, December 14th",
-    "> 6 to 8 pm",
-  ]
-  layer2d.textFont("Roboto Mono");
-  layer2d.fill(hi_white_hex);
-  layer2d.textSize(30);
-  layer2d.textAlign(LEFT, CENTER);
-  layer2d.text(lines[0], 2*margins, 300)
-  layer2d.text(lines[1], 2*margins, 350)
 }
 
 function drawGrid() {
@@ -124,21 +113,6 @@ function drawWaveform() {
   layer2d.pop()
 }
 
-function drawAddressText() {
-  let lines = [
-    "> The Company",
-    "> 2101 W 29th Ave",
-    "> Denver, CO 80211",
-  ]
-  layer2d.textFont("Roboto Mono");
-  layer2d.fill(hi_white_hex);
-  layer2d.textSize(30);
-  layer2d.textAlign(LEFT, CENTER);
-  layer2d.text(lines[0], 2*margins, height-175)
-  layer2d.text(lines[1], 2*margins, height-125)
-  layer2d.text(lines[2], 2*margins, height-75)
-}
-
 function drawProgressBar() {
   let nRects = 10;
   let xStart = 400;
@@ -168,7 +142,19 @@ function drawProgressBar() {
 function draw2d() {
   layer2d.clear()
   drawBorder();
-  drawTitleText();
+  drawText(
+    lines=[
+      "CREATIVE CODE",
+      "DENVER",
+    ],
+    font="Orbitron",
+    fontSize=50,
+    fontColor=hi_white_hex,
+    x=width/2,
+    y=85,
+    lineSize=55,
+    centered=true,
+  );
   drawScrollingBanner(
     banner="////////////////////////////",
     y=200,
@@ -193,10 +179,35 @@ function draw2d() {
     bStates=4,
     chracterColor=hi_green_hex,
   );
-  drawSubText();
+  drawText(
+    lines=[
+      "> Monday, December 14th",
+      "> 6 to 8 pm",
+    ],
+    font="Roboto Mono",
+    fontSize=30,
+    fontColor=hi_white_hex,
+    x=2*margins,
+    y=300,
+    lineSize=50,
+    centered=false,
+  );
   drawGrid();
   drawWaveform();
-  drawAddressText();
+  drawText(
+    lines=[
+      "> The Company",
+      "> 2101 W 29th Ave",
+      "> Denver, CO 80211",
+    ],
+    font="Roboto Mono",
+    fontSize=30,
+    fontColor=hi_white_hex,
+    x=2*margins,
+    y=height-125,
+    lineSize=50,
+    centered=true,
+  );
   drawProgressBar();
 }
 
