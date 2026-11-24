@@ -1,10 +1,22 @@
-# p5js-template
-This is a template for creating new p5 projects. This template is based on
-the p5 + VS Code setup as
+# Scifi UI
+
+A library of [p5.js](https://p5js.org) functions for generating scifi-looking micrographics that can be combined modularly into different compositions.
+
+## Graphics
+
+### creative-code-2026-12-14.js
+
+![A scifi UI showing a rotating globe, an scrolling ASCII banner, a sine wave, and a progress bar](graphics/creative-code-2026-12-14.gif)
+
+### creatives-club-boulder-2026-11-19.js
+
+![A scifi UI showing a sine wave, a rotating globe, and vertical progress bars](graphics/creatives-club-boulder-2026-11-19.gif)
+
+## Installation for development
+This project uses the p5 + VS Code setup as
 [published by Stef Tervelde and Raphaël de Courville](https://sableraph.notion.site/The-perfect-p5-js-VSCode-setup-for-everyday-creative-coding-414c7eb4fb524da28d53763777d427b8),
 which assumes that p5 will be installed using [Node.js](https://nodejs.org/en).
 
-## Installation
 To install p5 to use with this template, first check that Node.js is installed:
 ```bash
 node --version
@@ -20,15 +32,3 @@ Then, download & install the p5 package:
 ```bash
 npm install @types/p5
 ```
-
-## Change Log
-### 2025-10-04
-- Fix references to newly located JS files
-### 2024-02-29
-- Add p5
-- Add ts-check to the top of [sketch.js](sketch.js)
-### 2024-01-30
-- Ignore Node packages
-- Add jsconfig for global p5 completion
-- Remove JS directory
-- Remove p5 files

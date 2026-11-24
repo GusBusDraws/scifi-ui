@@ -1,5 +1,3 @@
-// @ts-nocheck
-/// <reference path="./node_modules/@types/p5/global.d.ts" />
 let background_hex = "#010703";
 let low_green_hex = "#0E361B";
 let med_green_hex = "#23783F";
@@ -11,47 +9,44 @@ let font;
 let frameNum = 0;
 let fps = 30;
 let nSeconds = 5;
-let margins = 25;
-let cursor = "█";
+let cursorChar = "█";
 
 function setup() {
   createCanvas(600, 800);
   layer3d = createGraphics(600, 800, WEBGL);
   layer2d = createGraphics(600, 800);
   frameRate(fps);
-  // saveGif("creative-code-denver.gif", nSeconds);
+  // saveGif("creatives-club-waves.gif", nSeconds);
 }
 
-function drawBorder() {
+function drawBorder(x, y, w, h, cornerRadius) {
   layer2d.noFill();
   layer2d.stroke(hi_green_hex);
   layer2d.strokeWeight(2);
-  layer2d.rect(margins, margins, width-50, height-50, 50);
+  layer2d.rect(x, y, w, h, cornerRadius);
   // layer2d.rect(25, 25, 0, 0, 50);
 }
 
-function drawTitleText() {
-  let lines = [
-    "CREATIVE CODE",
-    "DENVER",
-  ]
-  layer2d.textFont("Orbitron");
-  layer2d.fill(hi_white_hex);
-  layer2d.textSize(50);
-  layer2d.textAlign(CENTER, CENTER);
-  layer2d.text(lines[0], width/2, 85)
-  layer2d.text(lines[1], width/2, 140)
+function drawText(lines, font, fontSize, fontColor, x, y, lineSize, centered) {
+  layer2d.textFont(font);
+  layer2d.noStroke();
+  layer2d.fill(fontColor);
+  layer2d.textSize(fontSize);
+  if (centered == true) {
+    layer2d.textAlign(CENTER, CENTER);
+  } else {
+    layer2d.textAlign(LEFT, CENTER);
+  }
+  for (let i=0; i<lines.length; i++) {
+    layer2d.text(lines[i], x, y + i*lineSize)
+  }
 }
 
-function drawScrollingBanner(banner, y, nStates, characterColor) {
-  if (frameCount == 1){
-    console.log(characterColor)
-  }
+function drawScrollingBanner(banner, y, nStates) {
   let duration = 1;  // in seconds
 
   layer2d.textFont("Roboto Mono");
-  layer2d.noStroke();
-  layer2d.fill(characterColor);
+  layer2d.fill(hi_green_hex);
   layer2d.textSize(30);
   layer2d.textAlign(CENTER, CENTER);
 
@@ -104,41 +99,6 @@ function drawGrid() {
   }
 }
 
-function drawWaveform() {
-  let a = 80;
-  let w = PI/24;
-  let step = 1;
-  let xMax = 170;
-  let nCycles = 3;
-  let phase = 2*PI * nCycles * (frameCount - 1) / (fps * nSeconds);
-
-  layer2d.push()
-  layer2d.translate(50, 490)
-  layer2d.stroke(hi_green_hex);
-  for (let x = 0; x < xMax; x+=step) {
-    layer2d.line(
-      x, a*sin(w*x + phase),
-      (x+step), a*sin(w*(x+step) + phase),
-    )
-  }
-  layer2d.pop()
-}
-
-function drawAddressText() {
-  let lines = [
-    "> The Company",
-    "> 2101 W 29th Ave",
-    "> Denver, CO 80211",
-  ]
-  layer2d.textFont("Roboto Mono");
-  layer2d.fill(hi_white_hex);
-  layer2d.textSize(30);
-  layer2d.textAlign(LEFT, CENTER);
-  layer2d.text(lines[0], 2*margins, height-175)
-  layer2d.text(lines[1], 2*margins, height-125)
-  layer2d.text(lines[2], 2*margins, height-75)
-}
-
 function drawProgressBar() {
   let nRects = 10;
   let xStart = 400;
@@ -152,8 +112,8 @@ function drawProgressBar() {
   let rectHeight = yEnd - yStart;
   for (let i = 0; i < nRects; i++) {
     if ((frameCount-1) % (fps * nSeconds) < (i + 1)*(fps * nSeconds / (nRects + 1)) ) {
-      layer2d.stroke(low_green_hex);
-      layer2d.noFill();
+      layer2d.stroke(med_green_hex);
+      layer2d.fill(low_green_hex);
     } else {
       layer2d.stroke(hi_green_hex);
       layer2d.fill(med_green_hex);
@@ -165,57 +125,142 @@ function drawProgressBar() {
   }
 }
 
+
 function draw2d() {
-  layer2d.clear()
-  drawBorder();
-  drawTitleText();
-  drawScrollingBanner(
-    banner="////////////////////////////",
-    y=200,
-    bStates=1,
-    chracterColor=low_green_hex,
+  layer2d.clear();
+  let margin = 25;
+  let borderBottom = 550
+  drawBorder(
+    x=margin,
+    y=margin,
+    w=width-2*margin,
+    h=borderBottom-2*margin,
+    cornerRadius=margin,
   );
-  drawScrollingBanner(
-    banner=" //  //  //  //  //  //  // ",
-    y=200,
-    bStates=4,
-    chracterColor=hi_green_hex,
+  let margin2 = margin + 10;
+  drawBorder(
+    x=margin2,
+    y=margin2,
+    w=width-2*margin2,
+    h=borderBottom-2*margin2,
+    cornerRadius=margin-(margin2-margin),
   );
-  drawScrollingBanner(
-    banner="////////////////////////////",
-    y=240,
-    bStates=1,
-    chracterColor=low_green_hex,
+  drawText(
+    lines=[
+      "CREATIVES CLUB",
+      "BOULDER",
+    ],
+    font="Orbitron",
+    fontSize=45,
+    fontColor=hi_white_hex,
+    x=width/2,
+    y=85,
+    lineSize=50,
+    centered=true,
   );
-  drawScrollingBanner(
-    banner="//  //  //  //  //  //  //  ",
-    y=240,
-    bStates=4,
-    chracterColor=hi_green_hex,
+  drawWaveform(
+    xMin=50,
+    xMax=width-50,
+    yMin=200,
+    yMax=250,
+    nWaves=2,
+    nCycles=3,
   );
-  drawSubText();
-  drawGrid();
-  drawWaveform();
-  drawAddressText();
-  drawProgressBar();
+  drawText(
+    lines=[
+      "Thursday, November 19th",
+      "6 to 9 pm",
+    ],
+    font="Roboto Mono",
+    fontSize=25,
+    fontColor=hi_white_hex,
+    x=75,
+    y=300,
+    lineSize=50,
+    centered=false,
+  );
+  let blinkColor = low_green_hex
+  let blinkDuration = 0.5;
+  let frameType = Math.floor(
+    (frameCount-1) % (fps * blinkDuration)
+    / (fps * blinkDuration / 2)
+  )
+  if (frameType == 1) {
+    blinkColor = hi_green_hex
+  }
+  drawText(
+    lines=[
+      ">                             <",
+    ],
+    font="Roboto Mono",
+    fontSize=25,
+    fontColor=blinkColor,
+    x=width/2,
+    y=410,
+    lineSize=50,
+    centered=true,
+  );
+  drawText(
+    lines=[
+      "   Bring a project to work on!   ",
+    ],
+    font="Roboto Mono",
+    fontSize=25,
+    fontColor=hi_white_hex,
+    x=width/2,
+    y=410,
+    lineSize=50,
+    centered=true,
+  );
+  drawText(
+    lines=[
+      "VisionQuest Brewery",
+    ],
+    font="Roboto Mono",
+    fontSize=30,
+    fontColor=hi_white_hex,
+    x=width/2,
+    y=475,
+    lineSize=50,
+    centered=true,
+  );
+  drawVerticalProgressBar(
+    xMin=75,
+    xMax=25,
+    yMin=borderBottom,
+    yMax=borderBottom+100,
+    nRects=10,
+    spacing=5,
+    directionSign=-1,
+  );
+  drawVerticalProgressBar(
+    xMin=width-75,
+    xMax=width-25,
+    yMin=borderBottom,
+    yMax=borderBottom+100,
+    nRects=10,
+    spacing=5,
+    directionSign=1,
+  );
 }
 
 function drawSphere() {
   layer3d.clear()
   layer3d.push()
-  layer3d.translate(width*0.15, height*0.1)
   // Rotate the sphere down a bit, same rotation every time
-  layer3d.rotateX(-PI/6);
+  layer3d.rotateX(-PI/2);
+  layer3d.translate(0, 0, height*0.5)
+  layer3d.rotateZ(-PI/2);
   // Rotate the sphere by an amount that increases with every frame
   layer3d.rotateY(
-    (frameCount-1) * (PI/2)/(fps*nSeconds)
+    (frameCount-1) * (-PI/2)/(fps*nSeconds)
   );
   // Make the shape hollow/wireframe
   layer3d.noFill();
   layer3d.stroke(hi_green_hex);
   layer3d.strokeWeight(2);
   // Draw a sphere
-  layer3d.sphere(145, 16, 8);
+  layer3d.sphere(250, 16, 8);
   layer3d.pop()
 }
 
