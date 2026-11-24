@@ -43,11 +43,15 @@ function drawTitleText() {
   layer2d.text(lines[1], width/2, 140)
 }
 
-function drawScrollingBanner(banner, y, nStates) {
+function drawScrollingBanner(banner, y, nStates, characterColor) {
+  if (frameCount == 1){
+    console.log(characterColor)
+  }
   let duration = 1;  // in seconds
 
   layer2d.textFont("Roboto Mono");
-  layer2d.fill(hi_green_hex);
+  layer2d.noStroke();
+  layer2d.fill(characterColor);
   layer2d.textSize(30);
   layer2d.textAlign(CENTER, CENTER);
 
@@ -148,8 +152,8 @@ function drawProgressBar() {
   let rectHeight = yEnd - yStart;
   for (let i = 0; i < nRects; i++) {
     if ((frameCount-1) % (fps * nSeconds) < (i + 1)*(fps * nSeconds / (nRects + 1)) ) {
-      layer2d.stroke(med_green_hex);
-      layer2d.fill(low_green_hex);
+      layer2d.stroke(low_green_hex);
+      layer2d.noFill();
     } else {
       layer2d.stroke(hi_green_hex);
       layer2d.fill(med_green_hex);
@@ -166,10 +170,28 @@ function draw2d() {
   drawBorder();
   drawTitleText();
   drawScrollingBanner(
-    " //  //  //  //  //  //  // ", 200, 4
+    banner="////////////////////////////",
+    y=200,
+    bStates=1,
+    chracterColor=low_green_hex,
   );
   drawScrollingBanner(
-    "//  //  //  //  //  //  //  ", 240, 4
+    banner=" //  //  //  //  //  //  // ",
+    y=200,
+    bStates=4,
+    chracterColor=hi_green_hex,
+  );
+  drawScrollingBanner(
+    banner="////////////////////////////",
+    y=240,
+    bStates=1,
+    chracterColor=low_green_hex,
+  );
+  drawScrollingBanner(
+    banner="//  //  //  //  //  //  //  ",
+    y=240,
+    bStates=4,
+    chracterColor=hi_green_hex,
   );
   drawSubText();
   drawGrid();
