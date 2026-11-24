@@ -1,6 +1,6 @@
 # Scifi UI
 
-This project compiles a library of functions for generating scifi-looking micrographics that can be combined modularly into different compositions.
+A library of [p5.js](https://p5js.org) functions for generating scifi-looking micrographics that can be combined modularly into different compositions.
 
 ## p5.js setup
 This project uses the p5 + VS Code setup as
