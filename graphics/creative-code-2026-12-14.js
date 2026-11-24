@@ -76,7 +76,14 @@ function draw2d() {
     centered=false,
   );
   drawGrid();
-  drawWaveform();
+  drawWaveform(
+    xMin=50,
+    xMax=220,
+    yMin=410,
+    yMax=570,
+    nWaves=3,
+    nCycles=3,
+  );
   drawText(
     lines=[
       "> The Company",
@@ -87,9 +94,9 @@ function draw2d() {
     fontSize=30,
     fontColor=hi_white_hex,
     x=2*margins,
-    y=height-125,
+    y=height-175,
     lineSize=50,
-    centered=true,
+    centered=false,
   );
   drawProgressBar();
 }

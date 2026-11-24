@@ -5,3 +5,4 @@
 - Parameterize `drawText()`
 - Add `scifi-ui.js` to store library functions
 - Create a graphics directory for individual sketches
+- Parameterize `drawWaveform()` and add `drawVerticalProgressBar()`

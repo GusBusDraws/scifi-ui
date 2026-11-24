@@ -72,10 +72,28 @@ function drawGrid() {
   }
 }
 
-function drawWaveform() {
+function drawWaveform(xMin, xMax, yMin, yMax, nWaves, nCycles) {
+  let a = (yMax - yMin) / 2;
+  let w = 2*PI * nWaves / (xMax-xMin);
+  let phase = 2*PI * nCycles * (frameCount - 1) / (fps * nSeconds);
+  let xStep = 1;
+
+  layer2d.push()
+  layer2d.translate(xMin, yMax - a)
+  layer2d.stroke(hi_green_hex);
+  for (let x = 0; x < xMax-xMin; x+=xStep) {
+    layer2d.line(
+      x, a*sin(w*x + phase),
+      (x+xStep), a*sin(w*(x+xStep) + phase),
+    )
+  }
+  layer2d.pop()
+}
+
+function drawFlower() {
   let a = 80;
   let w = PI/24;
-  let step = 1;
+  let xStep = 1;
   let xMax = 170;
   let nCycles = 3;
   let phase = 2*PI * nCycles * (frameCount - 1) / (fps * nSeconds);
@@ -83,10 +101,10 @@ function drawWaveform() {
   layer2d.push()
   layer2d.translate(50, 490)
   layer2d.stroke(hi_green_hex);
-  for (let x = 0; x < xMax; x+=step) {
+  for (let x = 0; x < xMax; x+=xStep) {
     layer2d.line(
+      x, 0,
       x, a*sin(w*x + phase),
-      (x+step), a*sin(w*(x+step) + phase),
     )
   }
   layer2d.pop()
@@ -113,6 +131,30 @@ function drawProgressBar() {
     }
     layer2d.rect(
       xStart + i*(rectWidth + spacing), yStart,
+      rectWidth, rectHeight
+    );
+  }
+}
+
+function drawVerticalProgressBar(xMin, xMax, yMin, yMax, nRects, spacing, directionSign=1) {
+  let reverseOffset = 0;
+  if (directionSign == -1) {
+    reverseOffset = -1*(yMax - yMin)
+  }
+  let rectHeight = (
+    (yMax - yMin) - (nRects-1)*spacing
+  ) / nRects;
+  let rectWidth = xMax - xMin;
+  for (let i = 0; i < nRects; i++) {
+    if ((frameCount-1) % (fps * nSeconds) < (i + 1)*(fps * nSeconds / (nRects + 1)) ) {
+      layer2d.stroke(low_green_hex);
+      layer2d.noFill();
+    } else {
+      layer2d.stroke(hi_green_hex);
+      layer2d.fill(med_green_hex);
+    }
+    layer2d.rect(
+      xMin, yMin + i*directionSign*(rectHeight + spacing) - reverseOffset,
       rectWidth, rectHeight
     );
   }
