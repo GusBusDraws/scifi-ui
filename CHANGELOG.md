@@ -7,3 +7,4 @@
 - Create a graphics directory for individual sketches
 - Parameterize `drawWaveform()` and add `drawVerticalProgressBar()`
 - Add `graphics/creatives-club-boulder-2026-11-19.js`
+- Move sketches to `sketches/` so GIFs can go in `graphics/`
