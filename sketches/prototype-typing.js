@@ -79,7 +79,9 @@ function draw2d() {
   )
   typeText(
     textString="Wherever you go, there you are.",
-    characterDuration=0.1,
+    typingDuration=3,
+    startPauseDuration=2,
+    endPauseDuration=2,
     font="Roboto Mono",
     fontSize=25,
     fontColor=hi_white_hex,

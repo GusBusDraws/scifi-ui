@@ -35,7 +35,9 @@ function drawText(
 
 function typeText(
   textString,
-  characterDuration,
+  typingDuration,
+  startPauseDuration,
+  endPauseDuration,
   font,
   fontSize,
   fontColor,
@@ -43,11 +45,32 @@ function typeText(
   y,
   lineSize,
   centered=true,
+  cursorBlinkDuration=1,
 ) {
-  let cycleFrameCount = fps * characterDuration * (textString.length + 1);
+  let cycleFrameCount = fps * (
+    startPauseDuration + typingDuration + endPauseDuration
+  );
   let framePosition = (frameCount-1) % cycleFrameCount;
-  let textIndex = Math.floor(framePosition % (textString.length + 1))
-  let textToType = textString.slice(0, textIndex) + "█"
+  let textToType = "";
+  if (framePosition < fps * startPauseDuration) {
+    textToType = "█"
+  } else if (
+    framePosition < fps * ( startPauseDuration + typingDuration)
+  ) {
+    let textIndex = Math.floor(
+      (framePosition  - fps * startPauseDuration) /
+      (fps * typingDuration / (textString.length + 1))
+    )
+    textToType = textString.slice(0, textIndex) + "█"
+  } else {
+    textToType = textString + "█"
+  }
+
+  // let cycleFrameCount = fps * (onDuration + offDuration);
+  // let framePosition = (frameCount-1) % cycleFrameCount;
+  // if (framePosition < fps * onDuration) {
+  //   blinkColor = onColor;
+
   drawText(
     lines=[textToType],
     font=font,
