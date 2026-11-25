@@ -9,7 +9,16 @@ function drawBorder(x, y, w, h, cornerRadius) {
   // layer2d.rect(25, 25, 0, 0, 50);
 }
 
-function drawText(lines, font, fontSize, fontColor, x, y, lineSize, centered) {
+function drawText(
+  lines,
+  font,
+  fontSize,
+  fontColor,
+  x,
+  y,
+  lineSize,
+  centered=true,
+) {
   layer2d.textFont(font);
   layer2d.noStroke();
   layer2d.fill(fontColor);
@@ -22,6 +31,33 @@ function drawText(lines, font, fontSize, fontColor, x, y, lineSize, centered) {
   for (let i=0; i<lines.length; i++) {
     layer2d.text(lines[i], x, y + i*lineSize)
   }
+}
+
+function typeText(
+  textString,
+  characterDuration,
+  font,
+  fontSize,
+  fontColor,
+  x,
+  y,
+  lineSize,
+  centered=true,
+) {
+  let cycleFrameCount = fps * characterDuration * (textString.length + 1);
+  let framePosition = (frameCount-1) % cycleFrameCount;
+  let textIndex = Math.floor(framePosition % (textString.length + 1))
+  let textToType = textString.slice(0, textIndex) + "█"
+  drawText(
+    lines=[textToType],
+    font=font,
+    fontSize=fontSize,
+    fontColor=fontColor,
+    x=x,
+    y=y,
+    lineSize=lineSize,
+    centered=centered,
+  )
 }
 
 function drawScrollingBanner(banner, y, nStates, characterColor) {

@@ -35,16 +35,24 @@ function draw2d() {
     h=height/2-2*margin,
     cornerRadius=margin/2,
   );
+  drawWaveform(
+    xMin=2*margin,
+    xMax=width/2,
+    yMin=height*0.1,
+    yMax=height/2-margin,
+    nWaves=4,
+    nCycles=5,
+  );
   let blinkColor = getBlinkColor(
-    onColor=hi_green_hex,
+    onColor=hi_white_hex,
     offColor=low_green_hex,
     onDuration=1,
     offDuration=0.5,
   );
   drawText(
     lines=[
-      "Hello",
-      "world",
+      "Hello,",
+      "world.",
     ],
     font="Roboto Mono",
     fontSize=25,
@@ -54,21 +62,31 @@ function draw2d() {
     lineSize=50,
     centered=true,
   );
+  drawBorder(
+    x=2*margin,
+    y=height/2+margin,
+    w=width-4*margin,
+    h=height/4,
+    cornerRadius=margin/2,
+  );
   drawWaveform(
     xMin=2*margin,
-    xMax=width/2,
-    yMin=height*0.1,
-    yMax=height/2-margin,
-    nWaves=4,
-    nCycles=5,
-  )
-  drawWaveform(
-    xMin=25,
-    xMax=width-25,
-    yMin=height*0.6,
-    yMax=height*0.9,
+    xMax=width-2*margin,
+    yMin=height/2+2*margin,
+    yMax=height*0.75,
     nWaves=1,
     nCycles=2,
+  )
+  typeText(
+    textString="Wherever you go, there you are.",
+    characterDuration=0.1,
+    font="Roboto Mono",
+    fontSize=25,
+    fontColor=hi_white_hex,
+    x=width*0.5,
+    y=height*0.875,
+    lineSize=40,
+    centered=true,
   )
 }
 
