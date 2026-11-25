@@ -28,15 +28,12 @@ function draw2d() {
     h=height-2*margin,
     cornerRadius=margin,
   );
-  let blinkColor = low_green_hex
-  let blinkDuration = 0.5;
-  let frameType = Math.floor(
-    (frameCount-1) % (fps * blinkDuration)
-    / (fps * blinkDuration / 2)
-  )
-  if (frameType == 1) {
-    blinkColor = hi_green_hex
-  }
+  let blinkColor = getBlinkColor(
+    onColor=hi_green_hex,
+    offColor=low_green_hex,
+    onDuration=1,
+    offDuration=0.5,
+  );
   drawText(
     lines=[
       "Hello world",
@@ -49,12 +46,40 @@ function draw2d() {
     lineSize=50,
     centered=true,
   );
+  drawWaveform(
+    xMin=25,
+    xMax=width-25,
+    yMin=height*0.1,
+    yMax=height*0.4,
+    nWaves=4,
+    nCycles=5,
+  )
+  drawWaveform(
+    xMin=25,
+    xMax=width-25,
+    yMin=height*0.1,
+    yMax=height*0.4,
+    nWaves=4,
+    nCycles=5,
+  )
+}
+
+function draw3d() {
+  drawSphere(
+    xTranslate=0,
+    yTranslate=0,
+    zTranslate=0,
+    xAngle=0,
+    yAngle="spin",
+    zAngle=0,
+  )
 }
 
 function draw() {
   background(background_hex);
 
   draw2d();
+  // draw3d();
 
   image(layer2d, 0, 0)
   image(layer3d, 0, 0)

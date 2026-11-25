@@ -160,17 +160,36 @@ function drawVerticalProgressBar(xMin, xMax, yMin, yMax, nRects, spacing, direct
   }
 }
 
-function drawSphere() {
+  //////////////////
+ // 3D Functions //
+//////////////////
+
+function drawSphere(
+  xTranslate=0,
+  yTranslate=0,
+  zTranslate=0,
+  xAngle=-Pi/2,
+  yAngle="spin",
+  zAngle=-Pi/2,
+) {
   layer3d.clear()
   layer3d.push()
   // Rotate the sphere down a bit, same rotation every time
-  layer3d.rotateX(-PI/2);
-  layer3d.translate(0, 0, height*0.5)
-  layer3d.rotateZ(-PI/2);
-  // Rotate the sphere by an amount that increases with every frame
-  layer3d.rotateY(
-    (frameCount-1) * (-PI/2)/(fps*nSeconds)
+  layer3d.rotateX(xAngle);
+  layer3d.translate(
+    xTranslate,
+    yTranslate,
+    zTranslate,
   );
+  layer3d.rotateZ(zAngle);
+  // Rotate the sphere by an amount that increases with every frame
+  if (yAngle == "spin") {
+    layer3d.rotateY(
+      (frameCount-1) * (-PI/2)/(fps*nSeconds)
+    );
+  } else {
+    layer3d.rotateY(yAngle);
+  }
   // Make the shape hollow/wireframe
   layer3d.noFill();
   layer3d.stroke(hi_green_hex);
@@ -178,4 +197,23 @@ function drawSphere() {
   // Draw a sphere
   layer3d.sphere(250, 16, 8);
   layer3d.pop()
+}
+
+  ///////////////////////
+ // Utility Functions //
+///////////////////////
+
+function getBlinkColor(
+  onColor=hi_green_hex,
+  offColor=low_green_hex,
+  onDuration=0.5,
+  offDuration=0.5,
+) {
+  let blinkColor = offColor;
+  let cycleFrameCount = fps * (onDuration + offDuration);
+  let framePosition = (frameCount-1) % cycleFrameCount;
+  if (framePosition < fps * onDuration) {
+    blinkColor = onColor;
+  }
+  return blinkColor;
 }
