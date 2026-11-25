@@ -44,8 +44,10 @@ function typeText(
   x,
   y,
   lineSize,
-  centered=true,
+  centered=false,
   cursorBlinkDuration=1,
+  startCursorBlink=true,
+  endCursorBlink=true,
 ) {
   let cycleFrameCount = fps * (
     startPauseDuration + typingDuration + endPauseDuration
@@ -53,7 +55,15 @@ function typeText(
   let framePosition = (frameCount-1) % cycleFrameCount;
   let textToType = "";
   if (framePosition < fps * startPauseDuration) {
-    textToType = "█"
+    if (
+      startCursorBlink == true &&
+      Math.floor((frameCount-1) % (fps * cursorBlinkDuration)) /
+      (fps * cursorBlinkDuration / 2) < 1
+    ) {
+      textToType = "█"
+    } else {
+      textToType = ""
+    }
   } else if (
     framePosition < fps * ( startPauseDuration + typingDuration)
   ) {
@@ -63,7 +73,16 @@ function typeText(
     )
     textToType = textString.slice(0, textIndex) + "█"
   } else {
-    textToType = textString + "█"
+    if (
+      endCursorBlink == true &&
+      Math.floor((frameCount-1) % (fps * cursorBlinkDuration)) /
+      (fps * cursorBlinkDuration / 2) < 1
+    ) {
+      textToType = textString + "█"
+    }
+    else {
+      textToType = textString + " "
+    }
   }
 
   // let cycleFrameCount = fps * (onDuration + offDuration);

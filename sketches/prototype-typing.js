@@ -78,17 +78,36 @@ function draw2d() {
     nCycles=2,
   )
   typeText(
-    textString="Wherever you go, there you are.",
+    textString="Wherever you go,               ",
+    typingSpeed=3,
+    startPauseDuration=2,
+    endPauseDuration=2,
+    font="Roboto Mono",
+    fontSize=25,
+    fontColor=hi_white_hex,
+    x=2*margin,
+    y=height*0.875,
+    lineSize=40,
+    centered=false,
+    cursorBlinkDuration=1,
+    startCursorBlink=true,
+    endCursorBlink=true,
+  )
+  typeText(
+    textString="                 there you are.",
     typingDuration=3,
     startPauseDuration=2,
     endPauseDuration=2,
     font="Roboto Mono",
     fontSize=25,
     fontColor=hi_white_hex,
-    x=width*0.5,
+    x=2*margin,
     y=height*0.875,
     lineSize=40,
-    centered=true,
+    centered=false,
+    cursorBlinkDuration=false,
+    startCursorBlink=false,
+    endCursorBlink=true,
   )
 }
 
