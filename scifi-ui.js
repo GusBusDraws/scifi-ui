@@ -1,15 +1,24 @@
 // @ts-nocheck
 /// <reference path="./node_modules/@types/p5/global.d.ts" />
 
-function drawBorder() {
+function drawBorder(x, y, w, h, cornerRadius) {
   layer2d.noFill();
   layer2d.stroke(hi_green_hex);
   layer2d.strokeWeight(2);
-  layer2d.rect(margins, margins, width-50, height-50, 50);
+  layer2d.rect(x, y, w, h, cornerRadius);
   // layer2d.rect(25, 25, 0, 0, 50);
 }
 
-function drawText(lines, font, fontSize, fontColor, x, y, lineSize, centered) {
+function drawText(
+  lines,
+  font,
+  fontSize,
+  fontColor,
+  x,
+  y,
+  lineSize,
+  centered=true,
+) {
   layer2d.textFont(font);
   layer2d.noStroke();
   layer2d.fill(fontColor);
@@ -22,6 +31,75 @@ function drawText(lines, font, fontSize, fontColor, x, y, lineSize, centered) {
   for (let i=0; i<lines.length; i++) {
     layer2d.text(lines[i], x, y + i*lineSize)
   }
+}
+
+function typeText(
+  textString,
+  typingDuration,
+  startPauseDuration,
+  endPauseDuration,
+  font,
+  fontSize,
+  fontColor,
+  x,
+  y,
+  lineSize,
+  centered=false,
+  cursorBlinkDuration=1,
+  startCursorBlink=true,
+  endCursorBlink=true,
+) {
+  let cycleFrameCount = fps * (
+    startPauseDuration + typingDuration + endPauseDuration
+  );
+  let framePosition = (frameCount-1) % cycleFrameCount;
+  let textToType = "";
+  if (framePosition < fps * startPauseDuration) {
+    if (
+      startCursorBlink == true &&
+      Math.floor((frameCount-1) % (fps * cursorBlinkDuration)) /
+      (fps * cursorBlinkDuration / 2) < 1
+    ) {
+      textToType = "█"
+    } else {
+      textToType = ""
+    }
+  } else if (
+    framePosition < fps * ( startPauseDuration + typingDuration)
+  ) {
+    let textIndex = Math.floor(
+      (framePosition  - fps * startPauseDuration) /
+      (fps * typingDuration / (textString.length + 1))
+    )
+    textToType = textString.slice(0, textIndex) + "█"
+  } else {
+    if (
+      endCursorBlink == true &&
+      Math.floor((frameCount-1) % (fps * cursorBlinkDuration)) /
+      (fps * cursorBlinkDuration / 2) < 1
+    ) {
+      textToType = textString + "█"
+    }
+    else {
+      textToType = textString + " "
+    }
+  }
+
+  // let cycleFrameCount = fps * (onDuration + offDuration);
+  // let framePosition = (frameCount-1) % cycleFrameCount;
+  // if (framePosition < fps * onDuration) {
+  //   blinkColor = onColor;
+
+  drawText(
+    lines=[textToType],
+    font=font,
+    fontSize=fontSize,
+    fontColor=fontColor,
+    x=x,
+    y=y,
+    lineSize=lineSize,
+    centered=centered,
+  )
 }
 
 function drawScrollingBanner(banner, y, nStates, characterColor) {
@@ -158,4 +236,62 @@ function drawVerticalProgressBar(xMin, xMax, yMin, yMax, nRects, spacing, direct
       rectWidth, rectHeight
     );
   }
+}
+
+  //////////////////
+ // 3D Functions //
+//////////////////
+
+function drawSphere(
+  xTranslate=0,
+  yTranslate=0,
+  zTranslate=0,
+  xAngle=-Pi/2,
+  yAngle="spin",
+  zAngle=-Pi/2,
+) {
+  layer3d.clear()
+  layer3d.push()
+  // Rotate the sphere down a bit, same rotation every time
+  layer3d.rotateX(xAngle);
+  layer3d.translate(
+    xTranslate,
+    yTranslate,
+    zTranslate,
+  );
+  layer3d.rotateZ(zAngle);
+  // Rotate the sphere by an amount that increases with every frame
+  if (yAngle == "spin") {
+    layer3d.rotateY(
+      (frameCount-1) * (-PI/2)/(fps*nSeconds)
+    );
+  } else {
+    layer3d.rotateY(yAngle);
+  }
+  // Make the shape hollow/wireframe
+  layer3d.noFill();
+  layer3d.stroke(hi_green_hex);
+  layer3d.strokeWeight(2);
+  // Draw a sphere
+  layer3d.sphere(250, 16, 8);
+  layer3d.pop()
+}
+
+  ///////////////////////
+ // Utility Functions //
+///////////////////////
+
+function getBlinkColor(
+  onColor=hi_green_hex,
+  offColor=low_green_hex,
+  onDuration=0.5,
+  offDuration=0.5,
+) {
+  let blinkColor = offColor;
+  let cycleFrameCount = fps * (onDuration + offDuration);
+  let framePosition = (frameCount-1) % cycleFrameCount;
+  if (framePosition < fps * onDuration) {
+    blinkColor = onColor;
+  }
+  return blinkColor;
 }
