@@ -1,5 +1,8 @@
 # Change Log
 
+## 2026-11-26
+- Add 'make2DNetwork()` and `draw2DNetwork()`
+
 ## 2026-11-24
 - Add a template sketch
 - Split off `drawSphere()` into animation library
