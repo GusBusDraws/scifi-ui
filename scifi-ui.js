@@ -134,7 +134,12 @@ function make2DNetwork(nNodes, xMin, xMax, yMin, yMax) {
   for (let i=0; i<nNodes; i++) {
     let x = random(xMin, xMax);
     let y = random(yMin, yMax);
-    nodes.push({"x": x, "y": y, "distances": []});
+    nodes.push(
+      {
+        "x": x, "y": y, "distances": [],
+        "xDir": random([1, -1]), "yDir": random([1, -1])
+      }
+    );
   }
   for (let i=0; i<nodes.length; i++) {
     for (let j=0; j<nodes.length; j++) {
@@ -156,6 +161,37 @@ function make2DNetwork(nNodes, xMin, xMax, yMin, yMax) {
     edges.push([i, nextMinIndex])
   }
   return [nodes, edges]
+}
+
+function moveNodes(
+  nodes,
+  moveRange,
+  xMin,
+  xMax,
+  yMin,
+  yMax,
+  chanceDirChange=0.1,
+) {
+  for (let node of nodes) {
+    for (let dir of ["xDir", "yDir"]) {
+      if (random(1) < chanceDirChange) {
+        node[dir] = node[dir] * -1
+      }
+    }
+    node.x += node.xDir * random(moveRange)
+    node.y += node.yDir * random(moveRange)
+    if (node.x < xMin) {
+      node.x = xMin
+    } else if (node.x > xMax) {
+      node.x = xMax
+    }
+    if (node.y < yMin) {
+      node.y = yMin
+    } else if (node.y > yMax) {
+      node.y = yMax
+    }
+  }
+  return nodes
 }
 
 function draw2DNetwork(
