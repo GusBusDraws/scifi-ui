@@ -198,19 +198,52 @@ function moveNodes(
   return nodes
 }
 
+function getMoveDiameters(nNodes, minDiamter, maxDiameter) {
+  let moveDiameters = []
+  for (let i=0; i<nNodes; i++) {
+    moveDiameters.push(random(minDiamter, maxDiameter))
+  }
+  return moveDiameters
+}
+
+function getMoveDirections(nNodes) {
+  let moveDirections = []
+  for (let i=0; i<nNodes; i++) {
+    moveDirections.push(random([-1, 1]))
+  }
+  return moveDirections
+}
+
 function moveNodesInLoop(
   nodes,
   nSeconds,
+  moveDiameters,
+  moveDirections,
   xMin,
   xMax,
   yMin,
   yMax,
-  maxMoveDiameter=50,
+  clipOutOfBounds=false,
 ) {
   let angle = ((frameCount-1) % (fps * nSeconds)) / (fps * nSeconds) * 2*PI
-  for (let node of nodes) {
-    node.x = node.startX + maxMoveDiameter * cos(node.angle + angle)
-    node.y = node.startY + maxMoveDiameter * sin(node.angle + angle)
+  for (let i=0; i<nodes.length; i++) {
+    let node = nodes[i];
+    let moveDiameter = moveDiameters[i];
+    let moveDirection = moveDirections[i];
+    node.x = node.startX + moveDiameter * cos(node.angle + moveDirection*angle)
+    node.y = node.startY + moveDiameter * sin(node.angle + moveDirection*angle)
+    if (clipOutOfBounds == true) {
+      if (node.x < xMin) {
+        node.x = xMin
+      } else if (node.x > xMax) {
+        node.x = xMax
+      }
+      if (node.y < yMin) {
+        node.y = yMin
+      } else if (node.y > yMax) {
+        node.y = yMax
+      }
+    }
   }
   return nodes
 }

@@ -12,6 +12,7 @@ let cursorChar = "█";
 let margin = 25;
 let nodes, edges;
 let xMin, xMax, yMin, yMax;
+let moveDiameters, moveDirections;
 
 function setup() {
   createCanvas(600, 800);
@@ -19,17 +20,20 @@ function setup() {
   layer2d = createGraphics(600, 800);
   frameRate(fps);
   // saveGif("creatives-club-waves.gif", nSeconds);
+  let nNodes = 10;
   xMin = 3*margin;
   xMax = width-3*margin;
   yMin = 3*margin;
   yMax = height-3*margin;
   [nodes, edges] = make2DNetwork(
-    nNodes=10,
+    nNodes=nNodes,
     xMin=xMin,
     xMax=xMax,
     yMin=yMin,
     yMax=yMax,
   )
+  moveDiameters = getMoveDiameters(nNodes, 10, 50)
+  moveDirections = getMoveDirections(nNodes)
 }
 
 function draw2d() {
@@ -51,11 +55,13 @@ function draw2d() {
   nodes = moveNodesInLoop(
     nodes,
     nSeconds=5,
+    moveDiameters=moveDiameters,
+    moveDirections=moveDirections,
     xMin=xMin,
     xMax=xMax,
     yMin=yMin,
     yMax=yMax,
-    maxMoveDiameter=100,
+    clipOutOfBounds=false,
   )
   draw2DNetwork(
     nodes=nodes,
