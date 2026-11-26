@@ -4,6 +4,7 @@
 - Add `make2DNetwork()` and `draw2DNetwork()`
 - Add `moveNodes()` to move the nodes and change the direction of movement in x and y
 - Adapt `moveNodes()` to move the nodes in a radial direction
+- Add `moveNodesInLoop()` to move the nodes in a circle that will put them back to their starting place after a given number of seconds
 
 ## 2026-11-24
 - Add a template sketch

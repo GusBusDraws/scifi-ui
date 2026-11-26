@@ -136,7 +136,8 @@ function make2DNetwork(nNodes, xMin, xMax, yMin, yMax) {
     let y = random(yMin, yMax);
     nodes.push(
       {
-        "x": x, "y": y, "distances": [], "dir": random(0, 2*PI)
+        "x": x, "y": y, "distances": [], "angle": random(0, 2*PI),
+        "startX": x, "startY": y,
       }
     );
   }
@@ -174,25 +175,42 @@ function moveNodes(
 ) {
   for (let node of nodes) {
     if (random(1) < chanceDirChange) {
-      node.dir += random(-1*dirChangeRange, dirChangeRange)
+      node.angle += random(-1*dirChangeRange, dirChangeRange)
     }
     let move = random(moveRange)
-    node.x += move * cos(node.dir)
-    node.y += move * sin(node.dir)
+    node.x += move * cos(node.angle)
+    node.y += move * sin(node.angle)
     if (node.x < xMin) {
       node.x = xMin
-      node.dir += PI
+      node.angle += PI
     } else if (node.x > xMax) {
       node.x = xMax
-      node.dir += PI
+      node.angle += PI
     }
     if (node.y < yMin) {
       node.y = yMin
-      node.dir += PI
+      node.angle += PI
     } else if (node.y > yMax) {
       node.y = yMax
-      node.dir += PI
+      node.angle += PI
     }
+  }
+  return nodes
+}
+
+function moveNodesInLoop(
+  nodes,
+  nSeconds,
+  xMin,
+  xMax,
+  yMin,
+  yMax,
+  maxMoveDiameter=50,
+) {
+  let angle = ((frameCount-1) % (fps * nSeconds)) / (fps * nSeconds) * 2*PI
+  for (let node of nodes) {
+    node.x = node.startX + maxMoveDiameter * cos(node.angle + angle)
+    node.y = node.startY + maxMoveDiameter * sin(node.angle + angle)
   }
   return nodes
 }

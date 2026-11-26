@@ -48,15 +48,14 @@ function draw2d() {
     h=height-4*margin,
     cornerRadius=margin/2,
   );
-  nodes = moveNodes(
+  nodes = moveNodesInLoop(
     nodes,
+    nSeconds=5,
     xMin=xMin,
     xMax=xMax,
     yMin=yMin,
     yMax=yMax,
-    moveRange=1,
-    chanceDirChange=0.1,
-    dirChangeRange=PI/12,
+    maxMoveDiameter=100,
   )
   draw2DNetwork(
     nodes=nodes,
