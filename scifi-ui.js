@@ -136,8 +136,7 @@ function make2DNetwork(nNodes, xMin, xMax, yMin, yMax) {
     let y = random(yMin, yMax);
     nodes.push(
       {
-        "x": x, "y": y, "distances": [],
-        "xDir": random([1, -1]), "yDir": random([1, -1])
+        "x": x, "y": y, "distances": [], "dir": random(0, 2*PI)
       }
     );
   }
@@ -165,30 +164,34 @@ function make2DNetwork(nNodes, xMin, xMax, yMin, yMax) {
 
 function moveNodes(
   nodes,
-  moveRange,
   xMin,
   xMax,
   yMin,
   yMax,
+  moveRange=1,
   chanceDirChange=0.1,
+  dirChangeRange=PI/12,
 ) {
   for (let node of nodes) {
-    for (let dir of ["xDir", "yDir"]) {
-      if (random(1) < chanceDirChange) {
-        node[dir] = node[dir] * -1
-      }
+    if (random(1) < chanceDirChange) {
+      node.dir += random(-1*dirChangeRange, dirChangeRange)
     }
-    node.x += node.xDir * random(moveRange)
-    node.y += node.yDir * random(moveRange)
+    let move = random(moveRange)
+    node.x += move * cos(node.dir)
+    node.y += move * sin(node.dir)
     if (node.x < xMin) {
       node.x = xMin
+      node.dir += PI
     } else if (node.x > xMax) {
       node.x = xMax
+      node.dir += PI
     }
     if (node.y < yMin) {
       node.y = yMin
+      node.dir += PI
     } else if (node.y > yMax) {
       node.y = yMax
+      node.dir += PI
     }
   }
   return nodes

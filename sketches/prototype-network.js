@@ -50,12 +50,13 @@ function draw2d() {
   );
   nodes = moveNodes(
     nodes,
-    moveRange=1,
     xMin=xMin,
     xMax=xMax,
     yMin=yMin,
     yMax=yMax,
-    chanceDirChange=0.01,
+    moveRange=1,
+    chanceDirChange=0.1,
+    dirChangeRange=PI/12,
   )
   draw2DNetwork(
     nodes=nodes,
