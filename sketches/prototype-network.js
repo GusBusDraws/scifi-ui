@@ -7,7 +7,7 @@ let layer3d;
 let layer2d;
 let frameNum = 0;
 let fps = 30;
-let nSeconds = 5;
+let nSeconds = 9;
 let cursorChar = "█";
 let margin = 25;
 let nodes, edges;
@@ -19,25 +19,39 @@ function setup() {
   layer3d = createGraphics(600, 800, WEBGL);
   layer2d = createGraphics(600, 800);
   frameRate(fps);
-  // saveGif("creatives-club-waves.gif", nSeconds);
   let nNodes = 10;
-  xMin = 3*margin;
-  xMax = width-3*margin;
-  yMin = 3*margin;
-  yMax = height-3*margin;
+  xMin = 2*margin;
+  xMax = width-2*margin;
+  yMin = 0.2*height;
+  yMax = 0.8*height;
   [nodes, edges] = make2DNetwork(
     nNodes=nNodes,
-    xMin=xMin,
-    xMax=xMax,
-    yMin=yMin,
-    yMax=yMax,
+    xMin=xMin+2*margin,
+    xMax=xMax-2*margin,
+    yMin=yMin+2*margin,
+    yMax=yMax-2*margin,
   )
   moveDiameters = getMoveDiameters(nNodes, 10, 50)
   moveDirections = getMoveDirections(nNodes)
+  // saveGif("prototype-network.gif", nSeconds);
 }
 
 function draw2d() {
+  xMin = 2*margin;
+  xMax = width-2*margin;
+  yMin = 0.2*height;
+  yMax = 0.8*height;
   layer2d.clear();
+  drawText(
+    lines=["W A R N I N G"],
+    font="Orbitron",
+    fontSize=50,
+    fontColor=hi_white_hex,
+    x=width/2,
+    y=0.125*height,
+    lineSize=25,
+    centered=true,
+  )
   drawBorder(
     x=margin,
     y=margin,
@@ -46,15 +60,15 @@ function draw2d() {
     cornerRadius=margin,
   );
   drawBorder(
-    x=2*margin,
-    y=2*margin,
-    w=width-4*margin,
-    h=height-4*margin,
+    x=xMin,
+    y=yMin,
+    w=xMax-xMin,
+    h=yMax-yMin,
     cornerRadius=margin/2,
   );
   nodes = moveNodesInLoop(
     nodes,
-    nSeconds=5,
+    nSeconds=nSeconds,
     moveDiameters=moveDiameters,
     moveDirections=moveDirections,
     xMin=xMin,
@@ -70,6 +84,30 @@ function draw2d() {
     edgeWidth=2,
     nodeColor=hi_green_hex,
     edgeColor=med_green_hex,
+  )
+  typeText(
+    textString="Your attention is in motion.",
+    typingDuration=nSeconds/3,
+    startPauseDuration=nSeconds/3,
+    endPauseDuration=nSeconds/3,
+    font="Roboto Mono",
+    fontSize=20,
+    fontColor=hi_green_hex,
+    x=margin*3,
+    y=0.75*height,
+    lineSize=25,
+    centered=false,
+    cursorBlinkDuration=1,
+    startCursorBlink=true,
+    endCursorBlink=true,
+  )
+  drawWaveform(
+    xMin=2*margin,
+    xMax=width-2*margin,
+    yMin=0.8*height+margin,
+    yMax=height-2*margin,
+    nWaves=1,
+    nCycles=1,
   )
 }
 

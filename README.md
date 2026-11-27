@@ -12,6 +12,10 @@ A library of [p5.js](https://p5js.org) functions for generating scifi-looking mi
 
 ![A scifi UI showing a sine wave, a rotating globe, and vertical progress bars](graphics/creatives-club-boulder-2026-11-19.gif)
 
+### prototype-network.js
+
+![A procedural network graph animated in a loop](graphics/prototype-network.gif)
+
 ## Installation for development
 This project uses the p5 + VS Code setup as
 [published by Stef Tervelde and Raphaël de Courville](https://sableraph.notion.site/The-perfect-p5-js-VSCode-setup-for-everyday-creative-coding-414c7eb4fb524da28d53763777d427b8),
