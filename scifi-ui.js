@@ -102,6 +102,176 @@ function typeText(
   )
 }
 
+function getIndexOfNLowest(arr, n) {
+  let minVal = [...arr].sort((a, b) => a - b)[n];
+  return arr.indexOf(minVal);
+}
+
+function containsEdge(edges, edge) {
+  return edges.some(
+    subArr => (
+      subArr.length === edge.length
+      && edge.every(val => subArr.includes(val))
+    )
+  );
+}
+
+function getNextLowestUnusedIndex(nodes, edges, i, startN) {
+  let minIndex = getIndexOfNLowest(nodes[i].distances, startN);
+  if (
+    startN == nodes[i].distances.length - 2
+    || !containsEdge(edges, [i, minIndex])
+  ) {
+    return minIndex
+  }
+  return getNextLowestUnusedIndex(nodes, edges, i, startN+1)
+}
+
+function make2DNetwork(nNodes, xMin, xMax, yMin, yMax) {
+  let nodes = [];
+  let edges = [];
+  let distances = {};
+  for (let i=0; i<nNodes; i++) {
+    let x = random(xMin, xMax);
+    let y = random(yMin, yMax);
+    nodes.push(
+      {
+        "x": x, "y": y, "distances": [], "angle": random(0, 2*PI),
+        "startX": x, "startY": y,
+      }
+    );
+  }
+  for (let i=0; i<nodes.length; i++) {
+    for (let j=0; j<nodes.length; j++) {
+      if (i != j) {
+        let distance = dist(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y)
+        // The distances are pushed to the array in order, meaning that
+        // nodes[0].distance[1] would be the distance of nodes[0] to nodes[1]
+        nodes[i].distances.push(distance)
+      } else {
+        // Used to mark the index being compared, meaning that
+        // nodes[0].distance[0] = -1. This can be sorted out later!
+        nodes[i].distances.push(-1)
+      }
+    }
+    // Find the next lowest min distance that's not currently an edge, starting
+    // with n=1 to exclude the -1 placeholder
+    let nextMinIndex = getNextLowestUnusedIndex(nodes, edges, i, 1)
+    console.log(edges.includes([nextMinIndex, i]))
+    edges.push([i, nextMinIndex])
+  }
+  return [nodes, edges]
+}
+
+function moveNodes(
+  nodes,
+  xMin,
+  xMax,
+  yMin,
+  yMax,
+  moveRange=1,
+  chanceDirChange=0.1,
+  dirChangeRange=PI/12,
+) {
+  for (let node of nodes) {
+    if (random(1) < chanceDirChange) {
+      node.angle += random(-1*dirChangeRange, dirChangeRange)
+    }
+    let move = random(moveRange)
+    node.x += move * cos(node.angle)
+    node.y += move * sin(node.angle)
+    if (node.x < xMin) {
+      node.x = xMin
+      node.angle += PI
+    } else if (node.x > xMax) {
+      node.x = xMax
+      node.angle += PI
+    }
+    if (node.y < yMin) {
+      node.y = yMin
+      node.angle += PI
+    } else if (node.y > yMax) {
+      node.y = yMax
+      node.angle += PI
+    }
+  }
+  return nodes
+}
+
+function getMoveDiameters(nNodes, minDiamter, maxDiameter) {
+  let moveDiameters = []
+  for (let i=0; i<nNodes; i++) {
+    moveDiameters.push(random(minDiamter, maxDiameter))
+  }
+  return moveDiameters
+}
+
+function getMoveDirections(nNodes) {
+  let moveDirections = []
+  for (let i=0; i<nNodes; i++) {
+    moveDirections.push(random([-1, 1]))
+  }
+  return moveDirections
+}
+
+function moveNodesInLoop(
+  nodes,
+  nSeconds,
+  moveDiameters,
+  moveDirections,
+  xMin,
+  xMax,
+  yMin,
+  yMax,
+  clipOutOfBounds=false,
+) {
+  let angle = ((frameCount-1) % (fps * nSeconds)) / (fps * nSeconds) * 2*PI
+  for (let i=0; i<nodes.length; i++) {
+    let node = nodes[i];
+    let moveDiameter = moveDiameters[i];
+    let moveDirection = moveDirections[i];
+    node.x = node.startX + moveDiameter * cos(node.angle + moveDirection*angle)
+    node.y = node.startY + moveDiameter * sin(node.angle + moveDirection*angle)
+    if (clipOutOfBounds == true) {
+      if (node.x < xMin) {
+        node.x = xMin
+      } else if (node.x > xMax) {
+        node.x = xMax
+      }
+      if (node.y < yMin) {
+        node.y = yMin
+      } else if (node.y > yMax) {
+        node.y = yMax
+      }
+    }
+  }
+  return nodes
+}
+
+function draw2DNetwork(
+  nodes,
+  edges,
+  nodeDiameter,
+  edgeWidth,
+  nodeColor,
+  edgeColor,
+) {
+  layer2d.noFill();
+  layer2d.strokeWeight(edgeWidth);
+  layer2d.stroke(edgeColor);
+  for (let i=0; i<edges.length; i++) {
+    layer2d.line(
+      nodes[edges[i][0]].x, nodes[edges[i][0]].y,
+      nodes[edges[i][1]].x, nodes[edges[i][1]].y,
+    )
+  }
+  for (let i=0; i<nodes.length; i++) {
+    layer2d.noStroke();
+    layer2d.fill(nodeColor);
+    layer2d.circle(nodes[i].x, nodes[i].y, nodeDiameter)
+  }
+}
+
 function drawScrollingBanner(banner, y, nStates, characterColor) {
   if (frameCount == 1){
     console.log(characterColor)
